@@ -1,0 +1,69 @@
+#include <stdio.h>
+
+struct Process {
+    int pid;        // Process ID
+    int bt;         // Burst Time
+    int at;         // Arrival Time
+    int wt;         // Waiting Time
+    int tat;        // Turnaround Time
+    int ct;         // Completion Time
+};
+
+int main() {
+    int n;
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    struct Process p[n];
+
+    // Input burst time and arrival time
+    for (int i = 0; i < n; i++) {
+        p[i].pid = i + 1;
+        printf("Enter Burst Time and Arrival Time for Process %d: ", p[i].pid);
+        scanf("%d %d", &p[i].bt, &p[i].at);
+    }
+
+    // Sort processes by arrival time (FCFS rule)
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (p[i].at > p[j].at) {
+                struct Process temp = p[i];
+                p[i] = p[j];
+                p[j] = temp;
+            }
+        }
+    }
+
+    // Calculate Completion, Turnaround, and Waiting Times
+    int time = 0;
+    for (int i = 0; i < n; i++) {
+        if (time < p[i].at) {
+            time = p[i].at; // CPU waits if process hasn't arrived
+        }
+        time += p[i].bt;
+        p[i].ct = time;
+        p[i].tat = p[i].ct - p[i].at;
+        p[i].wt = p[i].tat - p[i].bt;
+    }
+
+    // Display results
+    printf("\nProcess\tAT\tBT\tCT\tTAT\tWT\n");
+    for (int i = 0; i < n; i++) {
+        printf("P%d\t%d\t%d\t%d\t%d\t%d\n",
+               p[i].pid, p[i].at, p[i].bt, p[i].ct, p[i].tat, p[i].wt);
+    }
+
+    // Calculate average TAT and WT
+    float avg_tat = 0, avg_wt = 0;
+    for (int i = 0; i < n; i++) {
+        avg_tat += p[i].tat;
+        avg_wt += p[i].wt;
+    }
+    avg_tat /= n;
+    avg_wt /= n;
+
+    printf("\nAverage Turnaround Time = %.2f", avg_tat);
+    printf("\nAverage Waiting Time = %.2f\n", avg_wt);
+
+    return 0;
+}
