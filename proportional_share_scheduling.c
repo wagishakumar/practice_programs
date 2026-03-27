@@ -7,7 +7,7 @@ char name[5]; int tickets; }
 Process;
 int main() {
 int n, total_tickets = 0; float total_T =0.0;
-printf("USN: 1BF24CS326\n");
+printf("USN: 1BF24CS334\n");
 printf("Enter the number of Processes: ");
 scanf("%d", &n);
 Process p[n];
